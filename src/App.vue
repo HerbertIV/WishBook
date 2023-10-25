@@ -1,5 +1,17 @@
 <script setup>
-console.log(process.env.NODE_ENV);
+export default {
+    methods: {
+        requestCameraAccess() {
+            navigator.mediaDevices.getUserMedia({ video: true })
+                .then(stream => {
+                    console.log('Dostęp do aparatu został udzielony', stream);
+                })
+                .catch(error => {
+                    console.error('Błąd podczas uzyskiwania dostępu do aparatu', error);
+                });
+        }
+    }
+}
 </script>
 
 <template>
@@ -26,10 +38,10 @@ console.log(process.env.NODE_ENV);
                                         <label for="file-upload" class="relative cursor-pointer rounded-md bg-white font-semibold text-indigo-600 focus-within:outline-none focus-within:ring-2 focus-within:ring-indigo-600 focus-within:ring-offset-2 hover:text-indigo-500">
                                             <span>Wgraj zdjęcie</span>
                                             <input
+                                                @click="requestCameraAccess"
                                                 id="file-upload"
                                                 name="file-upload"
                                                 type="file"
-                                                capture="user"
                                                 accept="image/*"
                                                 class="sr-only"
                                             />
