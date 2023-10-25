@@ -1,17 +1,14 @@
 <script setup>
-export default {
-    methods: {
-        requestCameraAccess() {
-            navigator.mediaDevices.getUserMedia({ video: true })
-                .then(stream => {
-                    console.log('Dostęp do aparatu został udzielony', stream);
-                })
-                .catch(error => {
-                    console.error('Błąd podczas uzyskiwania dostępu do aparatu', error);
-                });
-        }
-    }
+const requestCameraAccess = () => {
+    navigator.mediaDevices.getUserMedia({ video: true })
+        .then(stream => {
+            console.log('Dostęp do aparatu został udzielony', stream);
+        })
+        .catch(error => {
+            console.error('Błąd podczas uzyskiwania dostępu do aparatu', error);
+        });
 }
+
 </script>
 
 <template>
