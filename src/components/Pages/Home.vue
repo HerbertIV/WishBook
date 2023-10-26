@@ -74,7 +74,9 @@
                                     <button type="button"
                                             @click="removePhoto(image)"
                                             class="text-gray-400 bg-transparent rounded-lg text-sm w-8 h-8 ml-auto flex justify-center items-center p-1" data-modal-hide="default-modal">
-                                        <XMarkIcon class="bg-red-600 text-red-50 text-shadow rounded-md"/>
+<!--                                        <XMarkIcon class="bg-red-600 text-red-50 text-shadow rounded-md"/>-->
+
+                                        <font-awesome-icon icon="fa-solid fa-user-secret" class="bg-red-600 text-red-50 text-shadow rounded-md"/>
                                     </button>
                                 </div>
                             </div>
