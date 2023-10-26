@@ -73,10 +73,9 @@
                                      class="relative bg-white rounded-lg text-right h-40 bg-cover bg-center" :style="'background-image: url('+ image.image +')'">
                                     <button type="button"
                                             @click="removePhoto(image)"
-                                            class="text-gray-400 bg-transparent rounded-lg text-sm w-8 h-8 ml-auto flex justify-center items-center p-1" data-modal-hide="default-modal">
+                                            class="text-gray-400 bg-red-500 -mr-1.5 -mt-1.5 rounded-lg text-sm w-8 h-8 ml-auto flex justify-center items-center p-1 shadow-[0_0px_5px_rgba(0,0,0,1)]" data-modal-hide="default-modal">
 <!--                                        <XMarkIcon class="bg-red-600 text-red-50 text-shadow rounded-md"/>-->
-
-                                        <font-awesome-icon icon="fa-solid fa-user-secret" class="bg-red-600 text-red-50 text-shadow rounded-md"/>
+                                        <font-awesome-icon icon="fa-solid fa-xmark" class="text-lg text-red-50 text-shadow rounded-md" />
                                     </button>
                                 </div>
                             </div>
