@@ -51,16 +51,11 @@ export default {
             emit('syncImagesData', imagesData);
         };
 
-        const startFancy = (event) => {
-            Fancybox.show(imagesData, {});
-        };
-
         return {
             imagesData,
             images,
             removePhoto,
             uploadPhoto,
-            startFancy,
             index
         };
     }

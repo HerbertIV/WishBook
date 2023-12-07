@@ -1,46 +1,62 @@
 <script >
     import Header from "@/components/Layouts/Header.vue";
     import PhotoComponent from "@/components/components/PhotoComponent.vue";
-    import {reactive, ref, watch} from "vue";
+    import {reactive, ref, watch, inject} from "vue";
     import axios from "axios";
+    import Notifications from "@/components/components/Notifications.vue";
     export default {
         name: "Home",
-        components: {PhotoComponent, Header},
+        components: {Notifications, PhotoComponent, Header},
         setup() {
             const data = ref('');
             const wish = ref('');
             const setPublic = ref('');
+            const notifications = ref('');
             const handleImageData = (event) => {
                 data.images = event;
             }
+
             const sendData = (event) => {
                 let formData = new FormData();
-                for (let i = 0; i < data.images.length; i++) {
-                    formData.append('images[]', data.images[i].file);
+                if (data.images.length > 0) {
+                    for (let i = 0; i < data.images.length; i++) {
+                        formData.append('images[]', data.images[i].file);
+                    }
                 }
                 formData.append('wish', wish.value);
-                formData.append('setPublic', setPublic.value);
-
-                axios({
-                    method: 'post',
-                    url: 'http://localhost/api/test',
-                    data: formData
+                formData.append('isPublic', setPublic.value);
+                axios.post(
+                    'https://app.docker.example/api/wish/add',
+                    formData,
+                    {
+                        headers: {
+                            'Content-Type': 'multipart/form-data'
+                        }
+                    }
+                ).then((response) => {
+                    wish.value = '';
+                    setPublic.value = '';
+                    data.images.splice(0, data.images.length);
+                    notifications.value.addNotification('Dziękujemy za życzenia :)', 'success');
                 }).catch((e) => {
-                    console.log(e);
-                })
+                    console.log('error: ' + e);
+                    notifications.value.addNotification('Niestety coś poszło nie tak :(, spróbuj ponownie.', 'error');
+                });
             }
             return {
                 data,
                 setPublic,
                 wish,
                 sendData,
-                handleImageData
+                handleImageData,
+                notifications
             };
         }
     }
 </script>
 <template>
     <Header headerText="Podziel się życzeniami"/>
+    <Notifications ref="notifications" />
     <div class="mx-auto max-w-7xl py-6 px-4 sm:px-6 lg:px-8">
         <div class="space-y-12">
             <div class="border-b border-gray-900/10 pb-12">
@@ -71,7 +87,6 @@
                             </div>
                         </div>
                     </div>
-
                 </div>
             </div>
         </div>
