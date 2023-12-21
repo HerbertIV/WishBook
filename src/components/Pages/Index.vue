@@ -23,9 +23,10 @@ export default {
         const list = ref(null);
         const page = ref(1);
         const limit = 2;
+        console.log(process.env);
         const getWishes = async () => {
             axios.get(
-                `https://app.docker.example/api/wish/index?page=${page.value}&perPage=${limit}`
+                `${process.env.API_URL}/wish/index?page=${page.value}&perPage=${limit}`
             ).then((response) => {
                 wishes.value.push(...response.data);
                 loadMoreStatus.value = response.data.length < limit ?

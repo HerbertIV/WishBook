@@ -26,7 +26,7 @@
                 formData.append('wish', wish.value);
                 formData.append('isPublic', setPublic.value);
                 axios.post(
-                    'https://app.docker.example/api/wish/add',
+                    `${process.env.API_URL}/wish/add`,
                     formData,
                     {
                         headers: {
