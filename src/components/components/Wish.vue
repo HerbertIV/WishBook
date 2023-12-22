@@ -10,9 +10,10 @@
     </div>
     <div class="grid grid-cols-4 md:grid-cols-4 gap-4 my-10 px-6 place-items-center" v-if="images.length > 0">
         <VueGallery :images="images" :index="index" @close="index = null" :id="`gallery-${wish.id}`"></VueGallery>
-        <div v-for="(image, ImageIndex) in images" class="relative text-right">
+        <div v-for="(image, ImageIndex) in images" class="relative text-right w-full">
             <div :id="image.index"
-                 class="bg-white rounded-lg h-40 bg-cover bg-center hover:opacity-50 hover:cursor-pointer" :style="'background-image: url('+ image +')'"
+                 class="bg-white rounded-lg h-40 bg-cover bg-center hover:opacity-50 hover:cursor-pointer"
+                 :style="'background-image: url('+ image +')'"
                  @click="index = ImageIndex"
             >
             </div>

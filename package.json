@@ -3,7 +3,7 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "dev": "NODE_ENV=development vite",
+    "dev": "NODE_ENV=development API_URL=https://app.docker.example/api vite",
     "dev-build": "NODE_ENV=development vite build",
     "build": "NODE_ENV=production vite build",
     "preview": "vite preview"
@@ -20,6 +20,7 @@
     "@tailwindcss/typography": "^0.5.10",
     "@vue/cli-service": "^5.0.8",
     "axios": "^0.21.1",
+    "dotenv": "^16.3.1",
     "vue": "^3.3.4",
     "vue-gallery": "^2.0.5",
     "vue-router": "^4.2.5"

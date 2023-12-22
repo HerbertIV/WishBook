@@ -15,10 +15,9 @@
             const handleImageData = (event) => {
                 data.images = event;
             }
-
             const sendData = (event) => {
                 let formData = new FormData();
-                if (data.images.length > 0) {
+                if (data.images && data.images.length > 0) {
                     for (let i = 0; i < data.images.length; i++) {
                         formData.append('images[]', data.images[i].file);
                     }
