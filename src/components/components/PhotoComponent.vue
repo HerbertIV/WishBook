@@ -1,101 +1,120 @@
 <script>
+import VueEasyLightbox from 'vue-easy-lightbox/dist/external-css/vue-easy-lightbox.esm.min.js';
+import 'vue-easy-lightbox/dist/external-css/vue-easy-lightbox.css';
 import {reactive, defineEmits, ref} from "vue";
-import VueGallery from 'vue-gallery';
+import {FontAwesomeIcon} from "@fortawesome/vue-fontawesome";
+import Dropzone from "@/components/components/Dropzone.vue";
 
-
-const emit = defineEmits({
-    syncImagesData: (imagesData) => {
-        return imagesData;
-    },
-});
 export default {
     name: 'PhotoComponent',
     components: {
-        VueGallery,
+        FontAwesomeIcon,
+        VueEasyLightbox,
+        Dropzone
     },
     props: {
-        imagesData: {}
+        imagesData: Object,
+        dropzoneProperties: Object
     },
     setup(props, { emit }) {
-        const imagesData = reactive([]);
+        const imagesData = reactive(props.imagesData);
+        const dropzoneProperties = ref(props.dropzoneProperties);
         const images = reactive([]);
+        const visibleRef = ref(false)
+        const indexRef = ref(0)
         const index = ref('');
-        const uploadPhoto = (event) => {
-            let files = event.target.files;
-            for (let i = 0; i < files.length; i++) {
-                let file = files[i];
-                const reader = new FileReader
-                reader.onload = e => {
-                    imagesData.push({
-                        title: "",
-                        description: "",
-                        src: e.target.result,
-                        index: i,
-                        image: e.target.result,
-                        file: file
-                    });
-                    images.push(e.target.result);
-                }
-                reader.readAsDataURL(file);
-            }
-            emit('syncImagesData', imagesData);
-        };
+        const handleImageData = (event) => {
+            imagesData.value.push({
+                title: "",
+                description: "",
+                src: event.dataURL,
+                index: imagesData.value.length,
+                image: event.dataURL,
+                file: event.dataURL,
+            });
+            emit('pushToImagesData', event);
+        }
 
         const removePhoto = (image) => {
-            for (let i = 0; i < imagesData.length; i++) {
-                if (imagesData[i].index === image.index) {
-                    imagesData.splice(i, 1);
+            emit('removeFromImagesData', image.index);
+            for (let i = 0; i < imagesData.value.length; i++) {
+                if (imagesData.value[i].index === image.index) {
+                    imagesData.value.splice(i, 1);
                     images.splice(i, 1);
                 }
             }
-            emit('syncImagesData', imagesData);
+        };
+        const showImg = (index) => {
+            indexRef.value = index
+            visibleRef.value = true
+        }
+        const onHide = () => visibleRef.value = false
+        const afterComplete = async (file) => {
+            try {
+                console.log(file);
+            } catch (error) {
+                console.log(error);
+            }
+        }
+        const getDropzoneOptions = () => {
+            let options = {
+                url: `${process.env.API_URL}/wish/file-upload`,
+                thumbnailWidth: dropzoneProperties.value.width_thumbnail_photo,
+                thumbnailHeight: dropzoneProperties.value.height_thumbnail_photo,
+                addRemoveLinks: false,
+                acceptedFiles:"image/*",
+                paramName: 'image',
+                convertSize: 0,
+                resizeQuality: dropzoneProperties.value.resize_quality_photo,
+                dictDefaultMessage: dropzoneProperties.value.dropzone_message
+            };
+            if (dropzoneProperties.value.resize_width_photo) {
+                options.resizeWidth = dropzoneProperties.value.resize_width_photo;
+                options.resizeMimeType = 'image/jpeg';
+            }
+
+            return options;
         };
 
         return {
-            imagesData,
+            imagesData: imagesData.value,
             images,
             removePhoto,
-            uploadPhoto,
-            index
+            index,
+            visibleRef,
+            indexRef,
+            showImg,
+            onHide,
+            handleImageData,
+            dropzoneOptions: getDropzoneOptions(),
+            afterComplete
         };
     }
 }
 </script>
 <template>
     <div class="col-span-full">
-        <label for="cover-photo" class="block text-sm font-medium leading-6 text-gray-900">Zdjęcia</label>
-        <div class="mt-2 flex justify-center rounded-lg border border-dashed border-gray-900/25 px-6 py-10">
-            <div class="text-center">
-                <div class="mt-4 flex text-sm leading-6 text-gray-600">
-                    <label for="file-upload" class="relative cursor-pointer rounded-md bg-white font-semibold text-indigo-600 focus-within:outline-none focus-within:ring-2 focus-within:ring-indigo-600 focus-within:ring-offset-2 hover:text-indigo-500">
-                        <span>Wgraj zdjęcie</span>
-                        <input
-                            id="file-upload"
-                            name="file-upload"
-                            type="file"
-                            accept="image/*"
-                            class="sr-only"
-                            multiple
-                            @change="uploadPhoto($event)"
-                        />
-                    </label>
-                </div>
-            </div>
-        </div>
-        <div class="grid grid-cols-2 md:grid-cols-3 gap-4 mt-10">
-            <VueGallery :images="images" :index="index" @close="index = null"></VueGallery>
+        <label for="cover-photo" class="block text-[14px] leading-6 text-[#272525]">Zdjęcia</label>
+        <Dropzone :dropzoneOptions="dropzoneOptions"
+                  ref="dropzone"
+                  @syncImagesDataFromDropzone="handleImageData"
+                  @vdropzone-complete="afterComplete"
+        />
+        <div class="grid grid-cols-2 md:grid-cols-3 gap-4 mt-10" v-if="imagesData.length > 0">
             <div v-for="(image, ImageIndex) in imagesData" class="relative text-right" v-if="imagesData.length > 0">
                 <button type="button"
                         @click="removePhoto(image)"
                         class="absolute -right-1 -top-1 text-gray-400 bg-red-500 -mr-1.5 -mt-1.5 rounded-lg text-sm w-8 h-8 ml-auto flex justify-center items-center p-1 shadow-[0_0px_5px_rgba(0,0,0,1)]" data-modal-hide="default-modal">
                     <font-awesome-icon icon="fa-solid fa-xmark" class="text-lg text-red-50 text-shadow rounded-md" />
                 </button>
-                <div :id="image.index"
+                <div :data-image-id="image.index"
                      class="bg-white rounded-lg h-40 bg-cover bg-center" :style="'background-image: url('+ image.image +')'"
-                     @click="index = ImageIndex"
+                     @click="() => showImg(image.index)"
                 >
                 </div>
             </div>
+            <VueEasyLightbox :visible="visibleRef" :imgs="imagesData" :index="indexRef" @hide="onHide"></VueEasyLightbox>
+
         </div>
     </div>
 </template>

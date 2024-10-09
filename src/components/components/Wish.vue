@@ -6,7 +6,7 @@
             :class="{'w-1/2': description, 'w-full': !description}"
             @click="index = 0"
         ></div>
-        <div v-if="description" class="w-1/2 ml-3 text-center">{{ description }}</div>
+<!--        <div v-if="description" class="w-1/2 ml-3 text-center items-center flex">{{ description }}</div>-->
     </div>
     <div class="grid grid-cols-4 md:grid-cols-4 gap-4 my-10 px-6 place-items-center" v-if="images.length > 0">
         <VueGallery :images="images" :index="index" @close="index = null" :id="`gallery-${wish.id}`"></VueGallery>
@@ -26,7 +26,7 @@ import VueGallery from "vue-gallery";
 
 export default {
     name: "Wish",
-    components: {VueGallery},
+    components: {},
     props: {
         wish: String,
     },
