@@ -6,7 +6,7 @@ import vueJsx from '@vitejs/plugin-vue-jsx'
 import 'dotenv/config'
 
 export default defineConfig({
-  base: process.env.NODE_ENV === "production" ? "/WishBook/" : "/",
+  base: "/",
   plugins: [
     vue(),
     vueJsx()
