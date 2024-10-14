@@ -1,7 +1,7 @@
 <script>
 import VueEasyLightbox from 'vue-easy-lightbox/dist/external-css/vue-easy-lightbox.esm.min.js';
 import 'vue-easy-lightbox/dist/external-css/vue-easy-lightbox.css';
-import {reactive, defineEmits, ref} from "vue";
+import {reactive, ref} from "vue";
 import {FontAwesomeIcon} from "@fortawesome/vue-fontawesome";
 import Dropzone from "@/components/components/Dropzone.vue";
 

@@ -1,69 +1,3 @@
-<template>
-  <App>
-    <div class="relative z-10">
-      <Return :back="back" />
-      <Head head="Zdjęcia i wpisy" />
-      <TransitionGroup name="fade" mode="out-in" >
-        <div
-            :class="[
-                        cols === 4 ? 'grid-cols-4' : 'grid-cols-3',
-                        cols === 4 ? 'md:grid-cols-4' : 'md:grid-cols-3',
-                        cols === 4 ? 'gap-4' : 'gap-3',
-                    ]"
-            class="grid mx-2"
-        >
-          <div :class="'grid gap-' + cols" v-for="item in wishes">
-            <div v-for="wish in item" :class="{
-                            'animate-fade-in': wish ? wish.fade : false
-                        }">
-              <img v-if="wish" class="h-auto max-w-full rounded-lg object-cover"
-                   @click="openModal(wish)"
-                   :style="{
-                                   height: wish ? `${wish.height}px` : false,
-                                }"
-                   :src="wish.thumb" alt="">
-            </div>
-          </div>
-        </div>
-        <div v-if="!loading">
-          <p v-if="loadMoreStatus === 'no-more'" id="load-more" class="no-more my-3" ></p>
-          <button
-              class="hover:cursor-pointer hover:opacity-70 my-2 text-center w-full text-[20px] bg-[#ffffff]
-                            px-4 py-2 rounded-2xl shadow-[0_0_6px_0_rgba(57,100,90,0.3)] border-[1px] border-[#39645a41]"
-              v-else
-              @click="loadWishes">Pokaż więcej</button>
-        </div>
-        <div v-else>
-          <pulse-loader :loading="loading" :size="'10px'"></pulse-loader>
-        </div>
-      </TransitionGroup>
-      <ModalComponent :is-open="isModalOpened" @modal-close="closeModal">
-        <template #content>
-          <swiper
-              :slides-per-view="1"
-              :modules="modules"
-              :space-between="50"
-              @swiper="onSwiper"
-              @slideChange="onSlideChange"
-          >
-            <swiper-slide
-                v-for="(slideContent, index) in images"
-                :key="index"
-                :virtualIndex="index"
-            >
-              <div class="flex flex-wrap justify-center items-center w-[100vw] px-3">
-                <img :src="slideContent.url" :alt="slideContent.alt"/>
-                <div v-if="slideContent.wish.content" class="mt-5 text-center bg-[#FFFFFF] rounded-2xl py-2 px-4 shadow-md">
-                  <p>{{ slideContent.wish.content }}</p>
-                </div>
-              </div>
-            </swiper-slide>
-          </swiper>
-        </template>
-      </ModalComponent>
-    </div>
-  </App>
-</template>
 <script>
 import App from "@/components/Layouts/App.vue";
 import MasonryWall from '@yeger/vue-masonry-wall'
@@ -78,6 +12,8 @@ import 'swiper/css/pagination';
 import Head from "@/components/components/Head.vue";
 import Return from "@/components/components/Return.vue";
 import { VueFlexWaterfall } from 'vue-flex-waterfall';
+import {prepareUrlToRouter} from "@/router/helper";
+import {render} from "@/helpers/screenHelper";
 
 export default {
   name: "Index",
@@ -91,11 +27,9 @@ export default {
     SwiperSlide,
     VueFlexWaterfall
   },
-  props: {
-    back: String,
-  },
-  setup(props) {
-    const back = props.back;
+  setup() {
+    const props = ref(null);
+    const back = ref(null);
     const isModalOpened = ref(false);
     const page = ref(1);
     const limit = 15;
@@ -143,9 +77,6 @@ export default {
           }
         }
       }
-    });
-    onMounted(async () => {
-      loadWishes();
     });
 
     const loadWishes = async () => {
@@ -222,6 +153,14 @@ export default {
     };
     const onSlideChange = () => {
     };
+
+    onMounted(async () => {
+      props.value = await render('/wish/wishes');
+      back.value = prepareUrlToRouter(props.value.back);
+      await loadWishes();
+      loading.value = false;
+    });
+
     return {
       wishes: wishes.value.length > 0 ? wishes.value.slice().reverse() : wishes,
       isModalOpen: false,
@@ -243,6 +182,73 @@ export default {
   }
 }
 </script>
+
+<template>
+  <App>
+    <div class="relative z-10">
+      <Return :back="back" />
+      <Head head="Zdjęcia i wpisy" />
+      <TransitionGroup name="fade" mode="out-in" >
+        <div
+            :class="[
+                        cols === 4 ? 'grid-cols-4' : 'grid-cols-3',
+                        cols === 4 ? 'md:grid-cols-4' : 'md:grid-cols-3',
+                        cols === 4 ? 'gap-4' : 'gap-3',
+                    ]"
+            class="grid mx-2"
+        >
+          <div :class="'grid gap-' + cols" v-for="item in wishes">
+            <div v-for="wish in item" :class="{
+                            'animate-fade-in': wish ? wish.fade : false
+                        }">
+              <img v-if="wish" class="h-auto max-w-full rounded-lg object-cover"
+                   @click="openModal(wish)"
+                   :style="{
+                                   height: wish ? `${wish.height}px` : false,
+                                }"
+                   :src="wish.thumb" alt="">
+            </div>
+          </div>
+        </div>
+        <div v-if="!loading">
+          <p v-if="loadMoreStatus === 'no-more'" id="load-more" class="no-more my-3" ></p>
+          <button
+              class="hover:cursor-pointer hover:opacity-70 my-2 text-center w-full text-[20px] bg-[#ffffff]
+                            px-4 py-2 rounded-2xl shadow-[0_0_6px_0_rgba(57,100,90,0.3)] border-[1px] border-[#39645a41]"
+              v-else
+              @click="loadWishes">Pokaż więcej</button>
+        </div>
+        <div v-else>
+          <pulse-loader :loading="loading" :size="'10px'"></pulse-loader>
+        </div>
+      </TransitionGroup>
+      <ModalComponent :is-open="isModalOpened" @modal-close="closeModal">
+        <template #content>
+          <swiper
+              :slides-per-view="1"
+              :modules="modules"
+              :space-between="50"
+              @swiper="onSwiper"
+              @slideChange="onSlideChange"
+          >
+            <swiper-slide
+                v-for="(slideContent, index) in images"
+                :key="index"
+                :virtualIndex="index"
+            >
+              <div class="flex flex-wrap justify-center items-center w-[100vw] px-3">
+                <img :src="slideContent.url" :alt="slideContent.alt"/>
+                <div v-if="slideContent.wish.content" class="mt-5 text-center bg-[#FFFFFF] rounded-2xl py-2 px-4 shadow-md">
+                  <p>{{ slideContent.wish.content }}</p>
+                </div>
+              </div>
+            </swiper-slide>
+          </swiper>
+        </template>
+      </ModalComponent>
+    </div>
+  </App>
+</template>
 <style scoped>
 .swiper {
   width: 100%;

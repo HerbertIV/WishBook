@@ -5,9 +5,9 @@
             <router-link class="hover:cursor-pointer hover:opacity-70 my-2 text-center w-full text-[20px] bg-[#ffffff] px-4 py-5 rounded-2xl
             shadow-[0_0_6px_0_rgba(57,100,90,0.3)] border-[1px] border-[#39645a41] text-[#272525] flex flex-wrap justify-center" to="/harmonogram-wesela">Menu</router-link>
             <router-link class="hover:cursor-pointer hover:opacity-70 my-2 text-center w-full text-[20px] bg-[#ffffff]
-             px-4 py-5 rounded-2xl shadow-[0_0_6px_0_rgba(57,100,90,0.3)] border-[1px] border-[#39645a41]" to="/lista-zyczen">Dodaj wpis oraz zdjęcie</router-link>
+             px-4 py-5 rounded-2xl shadow-[0_0_6px_0_rgba(57,100,90,0.3)] border-[1px] border-[#39645a41]" to="/dodaj-zyczenie">Dodaj wpis oraz zdjęcie</router-link>
             <router-link class="hover:cursor-pointer hover:opacity-70 my-2 text-center w-full text-[20px] bg-[#ffffff] rounded-2xl
-            px-4 py-5 shadow-[0_0_6px_0_rgba(57,100,90,0.3)] border-[1px] border-[#39645a41]" to="/dodaj-zyczenie">Zobacz wpisy i zdjęcia</router-link>
+            px-4 py-5 shadow-[0_0_6px_0_rgba(57,100,90,0.3)] border-[1px] border-[#39645a41]" to="/lista-zyczen">Zobacz wpisy i zdjęcia</router-link>
         </div>
     </div>
 </template>

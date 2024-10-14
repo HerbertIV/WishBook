@@ -12,6 +12,11 @@ export default {
 </script>
 
 <template>
-  <RouterView />
+  <div class="block main min-h-full max-sm:h-full overflow-auto relative">
+    <div class="min-h-full font-lora max-w-[768px] w-full">
+      <Loader />
+      <RouterView />
+    </div>
+  </div>
 </template>
 

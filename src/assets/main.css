@@ -18,3 +18,118 @@ a,
   }
 }
 
+
+:root {
+  --swiper-pagination-color: rgb(93, 197, 150);
+}
+#app, html, body {
+  height: 100%;
+  color: #272525;
+  background: #dbe1db;
+}
+
+.main {
+  display: flex;
+  justify-content: center;
+  background-image: url("/assets/img/tlo.png");
+  background-size: cover;
+  background-position:center;
+  background-attachment:fixed;
+}
+
+.main:before {
+  content: "";
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  background-image: url("/assets/img/lisc-dol.svg");
+  width: 165px;
+  height: 267px;
+}
+
+
+.main:after {
+  content: url("/assets/img/lisc-gora.svg");
+  position: fixed;
+  top: 0;
+  right: 0;
+}
+
+.fade-enter-active, .fade-leave-active {
+  transition: opacity 0.5s ease;
+}
+
+.fade-enter-from, .fade-leave-to {
+  transition: opacity 0.5s ease;
+  opacity: 0;
+}
+
+.loader {
+  width: 48px;
+  height: 48px;
+  border: 5px solid #FFF;
+  border-bottom-color: transparent;
+  border-radius: 50%;
+  display: inline-block;
+  box-sizing: border-box;
+  animation: rotation 1s linear infinite;
+}
+
+@keyframes rotation {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+.fade-in-image { animation: fadeIn 5s; }
+
+@keyframes fadeIn {
+  0% {
+    transition: opacity 0.5s;
+    opacity: 0;
+  }
+  100% {
+    transition: opacity 0.5s;
+    opacity: 1;
+  }
+}
+/* DROPZONE STYLES */
+.dz-processing {
+  display: flex;
+  justify-content: center;
+  align-content: center;
+  position: relative;
+  pointer-events: none;
+}
+
+.dz-processing .dz-image {
+  opacity: .3;
+}
+
+.dz-processing .spinner {
+  bottom: 50%;
+  position: absolute;
+  width: 11.2px;
+  height: 11.2px;
+  animation: spinner-z355kx 1s infinite linear;
+  border-radius: 11.2px;
+  box-shadow: 28px 0px 0 0 #5dc596, 17.4px 21.8px 0 0 #5dc596, -6.2px 27.2px 0 0 #5dc596, -25.2px 12px 0 0 #5dc596, -25.2px -12px 0 0 #5dc596, -6.2px -27.2px 0 0 #5dc596, 17.4px -21.8px 0 0 #5dc596;
+}
+
+@keyframes spinner-z355kx {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.swiper-slide {
+  max-height: 100vh;
+  overflow-y: scroll;
+}
+
+.grecaptcha-badge {
+  display: none;
+}

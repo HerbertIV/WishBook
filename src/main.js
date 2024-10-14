@@ -8,8 +8,7 @@ import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 import { faXmark, faArrowRight , faAngleLeft} from '@fortawesome/free-solid-svg-icons'
 import { faHeart } from '@fortawesome/free-regular-svg-icons'
 import PulseLoader from 'vue-spinner/src/PulseLoader.vue'
-import { VueReCaptcha, useReCaptcha } from 'vue-recaptcha-v3'
-import store from './store'
+import { VueReCaptcha } from 'vue-recaptcha-v3'
 
 library.add(faXmark, faHeart, faArrowRight, faAngleLeft);
 const appName = import.meta.env.VITE_APP_NAME || 'Wesele - Magdalena & Hubert';
@@ -19,5 +18,7 @@ const app = createApp({
 })
 
 app.use(router)
+app.use(VueReCaptcha, {siteKey: '6LdK4fApAAAAANSwQKUq2A0fChdh4OXrmEY42PSk'})
 app.component('font-awesome-icon', FontAwesomeIcon);
+app.component('pulse-loader', PulseLoader);
 app.mount('#app')
