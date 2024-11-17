@@ -1,20 +1,19 @@
 <script>
-import App from "@/components/Layouts/App.vue";
 import { Swiper, SwiperSlide } from "swiper/vue";
 import { Autoplay, Pagination } from "swiper/modules";
 import 'swiper/css';
 import 'swiper/css/navigation';
 import 'swiper/css/pagination';
 import { getNow } from '@/components/helpers/date.js';
-import axios from "axios";
 import {onMounted, ref} from "vue";
 import {render} from "@/helpers/screenHelper";
+import {useLoaderStore} from "@/helpers/useLoaderStore";
 
 export default {
   name: "Home",
-  components: { SwiperSlide, Swiper, App },
-  layout: (h, page) => h(App, [page]),
+  components: { SwiperSlide, Swiper },
   setup() {
+    const loaderStore = useLoaderStore();
     const props = ref(null);
     const welcomeMsg = ref('');
     const weedingDate = ref(getNow('dd.mm.yyyy'));
@@ -29,7 +28,6 @@ export default {
       welcomeMsg.value = props.value.welcomeMsg;
       weedingDate.value = props.value.weedingDate;
       brideAndGroomNames.value = props.value.brideAndGroomNames;
-      console.log(props.value);
       let imagesData = JSON.parse(props.value.welcomePhotos);
       images.value = imagesData.map((image) => {
         return {
@@ -37,6 +35,7 @@ export default {
           class: 'bg-center'
         };
       });
+      loaderStore.hide();
     });
 
     return {

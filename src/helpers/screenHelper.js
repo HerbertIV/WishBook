@@ -1,9 +1,6 @@
-import axios from "axios";
+import {useDataStore} from "@/helpers/useDataStore";
 
 export const render = async (url) => {
-    return axios.get(
-        `${process.env.API_URL}${url}`
-    ).then((response) => {
-        return response.data;
-    });
+    const dataStore = useDataStore();
+    return await dataStore.fetchData(`${process.env.API_URL}${url}`);
 };

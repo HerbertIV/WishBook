@@ -1,5 +1,4 @@
 <script>
-import App from "@/components/Layouts/App.vue";
 import MasonryWall from '@yeger/vue-masonry-wall'
 import {onMounted, ref, TransitionGroup, onBeforeMount} from "vue";
 import axios from "axios";
@@ -20,7 +19,6 @@ export default {
   components: {
     Return, Head,
     TransitionGroup,
-    App,
     MasonryWall,
     ModalComponent,
     Swiper,

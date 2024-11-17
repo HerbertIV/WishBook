@@ -5,7 +5,6 @@ import {onMounted, reactive, ref} from "vue";
 import axios from "axios";
 import Notifications from "@/components/components/Notifications.vue";
 import Navbar from "@/components/Layouts/Navbar.vue";
-import App from "@/components/Layouts/App.vue";
 import Return from "@/components/components/Return.vue";
 import { useReCaptcha } from "vue-recaptcha-v3";
 import {prepareUrlToRouter} from "@/router/helper";
@@ -13,8 +12,7 @@ import {render} from "@/helpers/screenHelper";
 
 export default {
     name: "Create",
-    components: {Return, App, Navbar, Notifications, PhotoComponent, Head},
-    layout: (h, page) => h(App, [page]),
+    components: {Return, Navbar, Notifications, PhotoComponent, Head},
     setup() {
         const props = ref(null);
         const back = ref(null);

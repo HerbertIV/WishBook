@@ -9,7 +9,6 @@ import { RouterLink } from 'vue-router'
                 <div class="grid w-full items-center h-full">
                     <div class="block">
                         <div class="flex justify-between w-full items-baseline space-x-4">
-                            <!-- Current: "bg-gray-900 text-white", Default: "text-gray-300 hover:bg-gray-700 hover:text-white" -->
                             <RouterLink class="bg-gray-900 text-white rounded-md px-3 py-2 text-sm font-medium"
                                         :to="{ name: 'Home', headerText: 'Home' }">
                                 Dodaj wpis

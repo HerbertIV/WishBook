@@ -7,30 +7,37 @@
 </template>
 
 <script>
-import {onMounted, ref} from "vue";
+
+import {useLoaderStore} from "@/helpers/useLoaderStore";
+import {onMounted, ref, watch} from "vue";
 
 export default {
     name: 'Loader',
-    props: {
-        loading: Boolean
-    },
-    setup(props) {
-        const loading = props.loading ? props.loading : ref(true);
-        onMounted(() => {
-            document.onreadystatechange = () => {
-                if (document.readyState === 'complete') {
-                    loading.value = false;
-                }
-            }
-            if (loading.value === true) {
-                setTimeout(() => {
-                    loading.value = false;
-                }, 2000);
-            }
-        });
-        return {
-            loading
-        };
+    setup() {
+      const loaderStore = useLoaderStore();
+      const loading = ref(loaderStore.isLoading);
+      onMounted(() => {
+        document.onreadystatechange = () => {
+          if (document.readyState === 'complete') {
+            loaderStore.hide();
+          }
+        }
+        if (loading.value) {
+          setTimeout(() => {
+            loaderStore.hide();
+          }, 2000);
+        }
+      });
+      watch(
+          () => loaderStore.isLoading, // Obserwowany stan
+          (newValue) => {
+            loading.value = newValue; // Synchronizacja loading z loaderStore
+          }
+      );
+
+      return {
+        loading
+      };
     }
 }
 </script>
