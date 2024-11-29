@@ -10,6 +10,7 @@ import { faXmark, faArrowRight , faAngleLeft} from '@fortawesome/free-solid-svg-
 import { faHeart } from '@fortawesome/free-regular-svg-icons'
 import PulseLoader from 'vue-spinner/src/PulseLoader.vue'
 import { VueReCaptcha } from 'vue-recaptcha-v3'
+import {useStaticDataStore} from "@/helpers/staticDataStore";
 
 library.add(faXmark, faHeart, faArrowRight, faAngleLeft);
 const appName = import.meta.env.VITE_APP_NAME || 'Wesele - Magdalena & Hubert';
@@ -20,4 +21,7 @@ app.use(router)
 app.use(VueReCaptcha, {siteKey: '6LdK4fApAAAAANSwQKUq2A0fChdh4OXrmEY42PSk'})
 app.component('font-awesome-icon', FontAwesomeIcon);
 app.component('pulse-loader', PulseLoader);
-app.mount('#app')
+const staticDataStore = useStaticDataStore();
+staticDataStore.fetchScreensData().then(() => {
+    app.mount('#app');
+});

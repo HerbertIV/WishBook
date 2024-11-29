@@ -1,25 +1,22 @@
 <script>
 import Head from "@/components/components/Head.vue";
 import PhotoComponent from "@/components/components/PhotoComponent.vue";
-import {onMounted, reactive, ref} from "vue";
+import {reactive, ref} from "vue";
 import axios from "axios";
 import Notifications from "@/components/components/Notifications.vue";
 import Navbar from "@/components/Layouts/Navbar.vue";
 import Return from "@/components/components/Return.vue";
 import { useReCaptcha } from "vue-recaptcha-v3";
+import {useStaticDataStore} from "@/helpers/staticDataStore";
 import {prepareUrlToRouter} from "@/router/helper";
-import {render} from "@/helpers/screenHelper";
 
 export default {
     name: "Create",
     components: {Return, Navbar, Notifications, PhotoComponent, Head},
     setup() {
-        const props = ref(null);
-        const back = ref(null);
-        const indexUrl = ref(null);
-        const welcomeMsg = ref(null);
-        const failMsg = ref(null);
-        const dropzoneProperties = ref(null);
+        const staticDataStore = useStaticDataStore();
+        const addWishScreenConfig = ref(staticDataStore.screensData.add_wish);
+        const indexUrl = '/lista-zyczen';
         const data = ref({
             images: []
         });
@@ -31,7 +28,7 @@ export default {
         const setPublic = ref('');
         const notifications = ref('');
         const errors = ref([]);
-        const loading = ref(true);
+        const loading = ref(false);
 
         const handlePushToImageData = (event) => {
             errors.value = [];
@@ -66,10 +63,13 @@ export default {
                 `${process.env.API_URL}/wish/store`,
                 formData,
                 {}
-            ).then((response) => {
-                window.location.href = indexUrl.value;
-            }).catch((e, response) => {
-                notifications.value.addNotification(failMsg.value, 'error');
+            ).then(() => {
+                window.location.href = indexUrl;
+            }).catch((e) => {
+                notifications.value.addNotification(
+                    addWishScreenConfig.value.fail_upload_wish_message,
+                    'error'
+                );
                 if (typeof e.response.data.errors !== undefined && e.response.data.errors) {
                     errors.value = e.response.data.errors;
                 }
@@ -79,22 +79,12 @@ export default {
         const { executeRecaptcha, recaptchaLoaded } = useReCaptcha();
         const recaptcha = async () => {
             await recaptchaLoaded();
-            const token = await executeRecaptcha("login");
-
-            return token;
+            return await executeRecaptcha("login");
         }
 
-        onMounted(async () => {
-          props.value = await render('/wish/add-wish');
-          back.value = prepareUrlToRouter(props.value.back);
-          indexUrl.value = prepareUrlToRouter(props.value.indexUrl);
-          welcomeMsg.value = props.value.welcomeMsg;
-          failMsg.value = props.value.failMsg;
-          dropzoneProperties.value = props.value.dropzoneProperties;
-          loading.value = false;
-        });
-
         return {
+            back: prepareUrlToRouter(addWishScreenConfig.value.back),
+            addWishScreenConfig,
             data,
             images: data.value.images,
             setPublic,
@@ -104,11 +94,8 @@ export default {
             handleRemoveFromImageData,
             notifications,
             errors,
-            back,
             loading,
             imagesData,
-            welcomeMsg,
-            dropzoneProperties
         };
     }
 }
@@ -121,7 +108,7 @@ export default {
                 <div class="text-center">
                     <Head head="Dodaj wpis"/>
                     <div class="mt-1 min-[600px]:leading-6 md:leading-[2.8vw] text-[#272525] max-[600px]:text-[21px] md:text-[2vw] px-4">
-                        <div v-if="welcomeMsg" v-html="welcomeMsg"></div>
+                        <div v-if="addWishScreenConfig.description" v-html="addWishScreenConfig.description"></div>
                         <div v-else>
                             <p>Wpisy w tej księdze to początek</p>
                             <p>naszej małżeńskiej historii.</p>
@@ -139,11 +126,11 @@ export default {
                         <div class="">
                             <div class="grid grid-cols-1 gap-x-6 gap-y-4 sm:grid-cols-6">
                                 <PhotoComponent
-                                                v-if="dropzoneProperties"
+                                                v-if="addWishScreenConfig.dropzoneProperties"
                                                 @pushToImagesData="handlePushToImageData"
                                                 @removeFromImagesData="handleRemoveFromImageData"
                                                 :images-data="imagesData"
-                                                :dropzone-properties="dropzoneProperties"
+                                                :dropzone-properties="addWishScreenConfig.dropzoneProperties"
                                 />
                                 <div class="text-red-600" v-if="errors.images">{{ errors.images[0] }}</div>
                                 <div class="col-span-full mb-2">

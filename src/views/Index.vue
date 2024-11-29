@@ -12,7 +12,7 @@ import Head from "@/components/components/Head.vue";
 import Return from "@/components/components/Return.vue";
 import { VueFlexWaterfall } from 'vue-flex-waterfall';
 import {prepareUrlToRouter} from "@/router/helper";
-import {render} from "@/helpers/screenHelper";
+import {useStaticDataStore} from "@/helpers/staticDataStore";
 
 export default {
   name: "Index",
@@ -26,8 +26,8 @@ export default {
     VueFlexWaterfall
   },
   setup() {
-    const props = ref(null);
-    const back = ref(null);
+    const staticDataStore = useStaticDataStore();
+    const listWishesScreenConfig = ref(staticDataStore.screensData.list_wishes);
     const isModalOpened = ref(false);
     const page = ref(1);
     const limit = 15;
@@ -145,21 +145,19 @@ export default {
     }
 
     const onSwiper = (swiper) => {
-      let index = images.value.findIndex((element) => element.id === currentItem.value.id);
-      swiper.activeIndex = index;
+      swiper.activeIndex = images.value.findIndex((element) => element.id === currentItem.value.id);
       swiper.update();
     };
     const onSlideChange = () => {
     };
 
     onMounted(async () => {
-      props.value = await render('/wish/wishes');
-      back.value = prepareUrlToRouter(props.value.back);
       await loadWishes();
       loading.value = false;
     });
 
     return {
+      back: prepareUrlToRouter(listWishesScreenConfig.value.back),
       wishes: wishes.value.length > 0 ? wishes.value.slice().reverse() : wishes,
       isModalOpen: false,
       currentImageIndex: 0,
@@ -173,7 +171,6 @@ export default {
       onSlideChange,
       modules: [Pagination],
       currentItem,
-      back,
       images,
       cols
     };
